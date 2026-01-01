@@ -1,0 +1,10 @@
+[project]
+name = "scripts"
+version = "0.1.0"
+description = "Subdomain enumeration scripts using Amass"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "python-whois>=0.9.6",
+    "requests>=2.32.4",
+]

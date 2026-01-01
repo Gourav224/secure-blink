@@ -1,0 +1,389 @@
+{
+    "info": {
+        "_postman_id": "f6a8f896-5498-4be2-a660-a5d774035af1",
+        "name": "Secure Blink - Subdomain Enumeration API",
+        "description": "Complete API collection for the Secure Blink subdomain enumeration service. This API provides endpoints for passive reconnaissance using OWASP Amass.\n\n## Base URL\n`http://localhost:3000`\n\n## Authentication\nCurrently, no authentication is required. For production deployments, consider implementing API keys or OAuth.\n\n## Rate Limiting\nBe mindful of rate limits when performing multiple enumerations. Each enumeration can take several minutes to complete.\n\n## Response Format\nAll responses follow a consistent format:\n- Success responses include `success: true` and a `data` field\n- Error responses include `success: false` and an `error` field with details",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "32611504",
+        "_collection_link": "https://zero-one-creation.postman.co/workspace/Zero-One-Creation-Workspace~ae37f6f1-20db-46f1-8b7e-dd5747c4d0fc/collection/32611504-f6a8f896-5498-4be2-a660-a5d774035af1?action=share&source=collection_link&creator=32611504"
+    },
+    "item": [
+        {
+            "name": "Health Check",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [""],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/health",
+                    "host": ["{{base_url}}"],
+                    "path": ["health"]
+                },
+                "description": "Health check endpoint to verify the API server is running and responsive.\n\n**Use Cases:**\n- Verify API availability before making requests\n- Monitor service health\n- Integration testing\n\n**Response:**\n- `200 OK`: Service is healthy\n- Includes timestamp and service name"
+            },
+            "response": [
+                {
+                    "name": "Success",
+                    "originalRequest": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["health"]
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "cookie": [],
+                    "body": "{\n    \"status\": \"healthy\",\n    \"timestamp\": \"2026-01-01T12:00:00.000Z\",\n    \"service\": \"subdomain-enumeration-api\"\n}"
+                }
+            ]
+        },
+        {
+            "name": "Enumerate Domain",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [""],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"domain\": \"httpbin.org\"\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{base_url}}/enumerate",
+                    "host": ["{{base_url}}"],
+                    "path": ["enumerate"]
+                },
+                "description": "Start passive subdomain enumeration for a given domain using OWASP Amass.\n\n**Endpoint:** `POST /enumerate`\n\n**Request Body:**\n```json\n{\n    \"domain\": \"example.com\"\n}\n```\n\n**Description:**\nThis endpoint triggers a comprehensive passive reconnaissance process:\n1. Runs Amass in passive mode to discover subdomains\n2. Validates discovered subdomains (DNS resolution, HTTP accessibility)\n3. Resolves IP addresses for active subdomains\n4. Performs WHOIS lookup on the main domain\n5. Generates security findings\n6. Saves results in JSON format\n\n**Response Structure:**\n- `success`: Boolean indicating operation success\n- `data`: EnumerationResult object containing:\n  - `domain`: The enumerated domain\n  - `timestamp`: ISO timestamp of the enumeration\n  - `total_subdomains`: Total number of discovered subdomains\n  - `active_subdomains`: Number of subdomains with active services\n  - `subdomains`: Array of all subdomain information\n  - `active`: Array of active subdomains\n  - `inactive`: Array of inactive subdomains\n  - `whois_info`: WHOIS information (if available)\n- `metadata`: Processing metadata\n\n**Status Codes:**\n- `200 OK`: Enumeration completed successfully\n- `400 Bad Request`: Invalid domain format or missing domain parameter\n- `500 Internal Server Error`: Enumeration process failed\n\n**Processing Time:**\nEnumeration typically takes 2-5 minutes depending on:\n- Domain size and complexity\n- Number of discovered subdomains\n- Network conditions\n\n**Example Response:**\n```json\n{\n    \"success\": true,\n    \"data\": {\n        \"domain\": \"example.com\",\n        \"timestamp\": \"2026-01-01T12:00:00.000Z\",\n        \"total_subdomains\": 15,\n        \"active_subdomains\": 8,\n        \"subdomains\": [...],\n        \"active\": [...],\n        \"inactive\": [...],\n        \"whois_info\": {...}\n    },\n    \"metadata\": {\n        \"processingTime\": \"2026-01-01T12:00:00.000Z\",\n        \"totalSubdomains\": 15,\n        \"activeSubdomains\": 8\n    }\n}\n```"
+            },
+            "response": [
+                {
+                    "name": "Success",
+                    "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"domain\": \"example.com\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/enumerate",
+                            "host": ["{{base_url}}"],
+                            "path": ["enumerate"]
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "cookie": [],
+                    "body": "{\n    \"success\": true,\n    \"data\": {\n        \"domain\": \"example.com\",\n        \"timestamp\": \"2026-01-01T12:00:00.000Z\",\n        \"total_subdomains\": 15,\n        \"active_subdomains\": 8,\n        \"subdomains\": [\n            {\n                \"name\": \"www.example.com\",\n                \"dns_resolves\": true,\n                \"http_accessible\": true,\n                \"ip_addresses\": [\"93.184.216.34\"],\n                \"details\": {\n                    \"accessible\": true,\n                    \"status_code\": 200,\n                    \"protocol\": \"https\",\n                    \"url\": \"https://www.example.com\"\n                }\n            }\n        ],\n        \"active\": [],\n        \"inactive\": [],\n        \"whois_info\": {\n            \"registrar\": \"Example Registrar\",\n            \"creation_date\": \"1995-01-01\",\n            \"expiration_date\": \"2025-01-01\"\n        }\n    },\n    \"metadata\": {\n        \"processingTime\": \"2026-01-01T12:00:00.000Z\",\n        \"totalSubdomains\": 15,\n        \"activeSubdomains\": 8\n    }\n}"
+                },
+                {
+                    "name": "Invalid Domain",
+                    "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"domain\": \"invalid..domain\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/enumerate",
+                            "host": ["{{base_url}}"],
+                            "path": ["enumerate"]
+                        }
+                    },
+                    "status": "Bad Request",
+                    "code": 400,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "cookie": [],
+                    "body": "{\n    \"success\": false,\n    \"error\": \"Invalid domain format\",\n    \"message\": \"Please provide a valid domain name (e.g., example.com)\"\n}"
+                },
+                {
+                    "name": "Missing Domain",
+                    "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/enumerate",
+                            "host": ["{{base_url}}"],
+                            "path": ["enumerate"]
+                        }
+                    },
+                    "status": "Bad Request",
+                    "code": 400,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "cookie": [],
+                    "body": "{\n    \"success\": false,\n    \"error\": \"Domain is required\",\n    \"message\": \"Please provide a domain in the request body\"\n}"
+                }
+            ]
+        },
+        {
+            "name": "List All Scans",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [""],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/scans",
+                    "host": ["{{base_url}}"],
+                    "path": ["scans"]
+                },
+                "description": "Retrieve a list of all previous enumeration scan results.\n\n**Endpoint:** `GET /scans`\n\n**Description:**\nReturns a list of all saved scan results in JSON format. Each scan result includes:\n- Filename of the saved JSON file\n- API path to retrieve the specific scan\n\n**Response Structure:**\n- `count`: Total number of scans\n- `scans`: Array of scan items with:\n  - `filename`: Name of the JSON file\n  - `path`: API endpoint path to retrieve the scan\n\n**Status Codes:**\n- `200 OK`: Successfully retrieved scan list\n- `500 Internal Server Error`: Failed to read scan directory\n\n**Use Cases:**\n- Browse previous enumeration results\n- Track enumeration history\n- Retrieve specific scan filenames for detailed retrieval"
+            },
+            "response": [
+                {
+                    "name": "Success",
+                    "originalRequest": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/scans",
+                            "host": ["{{base_url}}"],
+                            "path": ["scans"]
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "cookie": [],
+                    "body": "{\n    \"count\": 3,\n    \"scans\": [\n        {\n            \"filename\": \"example.com_20260101_120000.json\",\n            \"path\": \"/scans/example.com_20260101_120000.json\"\n        },\n        {\n            \"filename\": \"test.com_20260101_130000.json\",\n            \"path\": \"/scans/test.com_20260101_130000.json\"\n        }\n    ]\n}"
+                },
+                {
+                    "name": "No Scans",
+                    "originalRequest": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/scans",
+                            "host": ["{{base_url}}"],
+                            "path": ["scans"]
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "cookie": [],
+                    "body": "{\n    \"count\": 0,\n    \"scans\": [],\n    \"message\": \"No scans found\"\n}"
+                }
+            ]
+        },
+        {
+            "name": "Get Specific Scan",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [""],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/scans/:filename",
+                    "host": ["{{base_url}}"],
+                    "path": ["scans", ":filename"],
+                    "variable": [
+                        {
+                            "key": "filename",
+                            "value": "sample_output.json",
+                            "description": "The filename of the scan result to retrieve. Must be a valid JSON file from the scans list."
+                        }
+                    ]
+                },
+                "description": "Retrieve a specific enumeration scan result by filename.\n\n**Endpoint:** `GET /scans/:filename`\n\n**Path Parameters:**\n- `filename`: The JSON filename of the scan result (e.g., `example.com_20260101_120000.json`)\n\n**Description:**\nReturns the complete enumeration result for a previously saved scan. This includes all subdomain information, validation results, and metadata.\n\n**Response Structure:**\nReturns the full `EnumerationResult` object:\n- `domain`: The enumerated domain\n- `timestamp`: When the enumeration was performed\n- `total_subdomains`: Total discovered subdomains\n- `active_subdomains`: Number of active subdomains\n- `subdomains`: Complete list of all subdomains with details\n- `active`: List of active subdomains\n- `inactive`: List of inactive subdomains\n- `whois_info`: WHOIS information (if available)\n\n**Status Codes:**\n- `200 OK`: Successfully retrieved scan result\n- `400 Bad Request`: Invalid filename (contains path traversal characters)\n- `404 Not Found`: Scan file does not exist\n- `500 Internal Server Error`: Failed to read scan file\n\n**Security:**\nThe endpoint prevents directory traversal attacks by validating the filename.\n\n**Use Cases:**\n- Retrieve detailed results from previous enumerations\n- Compare results across different time periods\n- Export data for further analysis"
+            },
+            "response": [
+                {
+                    "name": "Success",
+                    "originalRequest": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/scans/example.com_20260101_120000.json",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "scans",
+                                "example.com_20260101_120000.json"
+                            ]
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "cookie": [],
+                    "body": "{\n    \"domain\": \"example.com\",\n    \"timestamp\": \"2026-01-01T12:00:00.000Z\",\n    \"total_subdomains\": 15,\n    \"active_subdomains\": 8,\n    \"subdomains\": [...],\n    \"active\": [...],\n    \"inactive\": [...],\n    \"whois_info\": {...}\n}"
+                },
+                {
+                    "name": "Not Found",
+                    "originalRequest": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/scans/nonexistent.json",
+                            "host": ["{{base_url}}"],
+                            "path": ["scans", "nonexistent.json"]
+                        }
+                    },
+                    "status": "Not Found",
+                    "code": 404,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "cookie": [],
+                    "body": "{\n    \"success\": false,\n    \"error\": \"Scan not found\",\n    \"message\": \"No scan found with filename: nonexistent.json\"\n}"
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [""]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [""]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:3000",
+            "type": "string"
+        }
+    ]
+}

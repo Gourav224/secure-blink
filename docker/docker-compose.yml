@@ -1,0 +1,18 @@
+services:
+  amass:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    container_name: amass-tool
+    volumes:
+      - ../outputs:/outputs
+      - ../scripts:/app
+    working_dir: /app
+    command: tail -f /dev/null
+    networks:
+      - recon-network
+
+networks:
+  recon-network:
+    driver: bridge
