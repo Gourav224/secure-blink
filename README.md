@@ -1,4 +1,4 @@
-# Secure Blink - Subdomain Enumeration API
+# Subdomain Enumeration API
 
 A comprehensive subdomain enumeration solution using OWASP Amass, Python, and Express.js. This project automates passive reconnaissance on domains, validates discovered subdomains, and provides a RESTful API for integration.
 
